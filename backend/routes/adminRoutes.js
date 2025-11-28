@@ -6,6 +6,7 @@ import { adminAuth } from "../middleware/adminAuth.js";
 
 const router = express.Router();
 
+//router.post("/superadmin/create-admin", createAdmin);
 router.post("/admin/login", adminLogin);
 router.get("/admin/dashboard", adminAuth, (req, res) => {
   res.json({ message: "Admin Dashboard", admin: req.admin });

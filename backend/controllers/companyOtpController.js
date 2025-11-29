@@ -1,11 +1,12 @@
 import pool from "../config/db.js";
 
-// Helper: Generate 6-digit OTP
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-// SEND OTP
+/* ============================================================
+   1. SEND OTP TO COMPANY
+============================================================ */
 export const sendOtpToCompany = async (req, res) => {
   try {
     const { company_id, phone } = req.body;
@@ -14,6 +15,7 @@ export const sendOtpToCompany = async (req, res) => {
       return res.status(400).json({ message: "company_id and phone required" });
     }
 
+    // Check if company exists
     const company = await pool.query(
       `SELECT id FROM company_schema.companies WHERE id = $1`,
       [company_id]
@@ -23,8 +25,9 @@ export const sendOtpToCompany = async (req, res) => {
       return res.status(404).json({ message: "Company not found" });
     }
 
+    // Generate OTP
     const otp = generateOTP();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
 
     await pool.query(
       `INSERT INTO company_schema.company_otp
@@ -36,7 +39,7 @@ export const sendOtpToCompany = async (req, res) => {
     res.json({
       success: true,
       message: "OTP sent successfully",
-      otp,
+      otp, // remove in production
       expires_at: expiresAt
     });
 
@@ -46,7 +49,9 @@ export const sendOtpToCompany = async (req, res) => {
   }
 };
 
-// VERIFY OTP
+/* ============================================================
+   2. VERIFY COMPANY OTP + APPROVE COMPANY
+============================================================ */
 export const verifyCompanyOtp = async (req, res) => {
   try {
     const { company_id, otp_code } = req.body;
@@ -55,6 +60,7 @@ export const verifyCompanyOtp = async (req, res) => {
       return res.status(400).json({ message: "company_id and otp_code required" });
     }
 
+    // Get latest OTP
     const result = await pool.query(
       `SELECT * FROM company_schema.company_otp
        WHERE company_id = $1
@@ -68,17 +74,30 @@ export const verifyCompanyOtp = async (req, res) => {
 
     const otpRecord = result.rows[0];
 
+    // Check expiry
     if (new Date() > otpRecord.expires_at) {
       return res.status(400).json({ message: "OTP expired" });
     }
 
+    // Check OTP match
     if (otpRecord.otp_code !== otp_code) {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
+    // ⭐ UPDATE company approval status
+    const updated = await pool.query(
+      `UPDATE company_schema.companies
+       SET is_approved = TRUE,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = $1
+       RETURNING id, name, email, phone, gst_no, is_approved`,
+      [company_id]
+    );
+
     res.json({
       success: true,
-      message: "OTP verified successfully"
+      message: "OTP verified & company approved successfully",
+      company: updated.rows[0]
     });
 
   } catch (error) {

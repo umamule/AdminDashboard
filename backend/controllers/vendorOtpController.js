@@ -6,9 +6,6 @@ function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
-/* ============================================================
-   1. SEND / GENERATE OTP FOR VENDOR
-============================================================ */
 export const sendVendorOtp = async (req, res) => {
   try {
     const { vendor_id, email } = req.body;
@@ -52,9 +49,7 @@ export const sendVendorOtp = async (req, res) => {
   }
 };
 
-/* ============================================================
-   2. VERIFY VENDOR OTP + UPDATE is_approve = TRUE
-============================================================ */
+
 export const verifyVendorOtp = async (req, res) => {
   try {
     const { vendor_id, otp } = req.body;
@@ -88,7 +83,7 @@ export const verifyVendorOtp = async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP" });
     }
 
-    // ⭐ UPDATE vendor approval status
+    //  UPDATE vendor approval status
     const update = await pool.query(
       `UPDATE vendor_schema.vendors
        SET is_approve = TRUE, updated_at = CURRENT_TIMESTAMP

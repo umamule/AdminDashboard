@@ -1,8 +1,5 @@
 import pool from "../config/db.js";
 
-// -------------------------
-// CREATE company_type
-// -------------------------
 export const createCompanyType = async (req, res) => {
   try {
     const { type, description } = req.body;
@@ -23,9 +20,7 @@ export const createCompanyType = async (req, res) => {
   }
 };
 
-// // -------------------------
-// // GET ALL company_types
-// // -------------------------
+
 // export const getCompanyTypes = async (req, res) => {
 //   try {
 //     const result = await pool.query(`
@@ -40,9 +35,7 @@ export const createCompanyType = async (req, res) => {
 //   }
 // };
 
-// // -------------------------
-// // UPDATE company_type
-// // -------------------------
+
 // export const updateCompanyType = async (req, res) => {
 //   try {
 //     const { id } = req.params;
@@ -69,9 +62,6 @@ export const createCompanyType = async (req, res) => {
 //   }
 // };
 
-// // -------------------------
-// // DELETE company_type
-// // -------------------------
 // export const deleteCompanyType = async (req, res) => {
 //   try {
 //     const { id } = req.params;

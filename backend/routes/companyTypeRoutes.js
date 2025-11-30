@@ -9,9 +9,9 @@ import {
 const router = express.Router();
 
 // Admin APIs
-router.post("/", createCompanyType);       // Create
-// router.get("/", getCompanyTypes);          // Get all
-// router.put("/:id", updateCompanyType);     // Update
-// router.delete("/:id", deleteCompanyType);  // Delete
+router.post("/", createCompanyType);       
+// router.get("/", getCompanyTypes);      
+// router.put("/:id", updateCompanyType);     
+// router.delete("/:id", deleteCompanyType);  
 
 export default router;

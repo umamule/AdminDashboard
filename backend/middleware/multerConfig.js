@@ -34,7 +34,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// THIS IS THE FIX 👇
+
 // Correct ESM Export
 export const uploadVendorDocs = multer({
   storage,

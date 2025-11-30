@@ -1,8 +1,7 @@
-// controllers/companyController.js
+
 import pool from "../config/db.js";
 import bcrypt from "bcryptjs";
 
-// ➤ 1. Add Company
 export const addCompany = async (req, res) => {
   try {
     const {
@@ -61,7 +60,6 @@ export const addCompany = async (req, res) => {
   }
 };
 
-// ➤ 2. Get All Companies
 export const getAllCompanies = async (req, res) => {
   try {
     const result = await pool.query(
@@ -78,7 +76,6 @@ export const getAllCompanies = async (req, res) => {
   }
 };
 
-// ➤ 3. Get Company by ID
 export const getCompanyById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -104,7 +101,7 @@ export const getCompanyById = async (req, res) => {
   }
 };
 
-// ➤ 4. Update Company
+
 export const updateCompany = async (req, res) => {
   try {
     const { id } = req.params;
@@ -168,7 +165,6 @@ export const updateCompany = async (req, res) => {
   }
 };
 
-// ➤ 5. Soft Delete (Deactivate Company)
 export const deleteCompany = async (req, res) => {
   try {
     const { id } = req.params;

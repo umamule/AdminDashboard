@@ -27,7 +27,7 @@ export const sendOtpToCompany = async (req, res) => {
 
     // Generate OTP
     const otp = generateOTP();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    const expiresAt = new Date(Date.now() + 1 * 60 * 1000); // 5 minutes
 
     await pool.query(
       `INSERT INTO company_schema.company_otp

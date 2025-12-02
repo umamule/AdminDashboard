@@ -164,7 +164,6 @@ export const updateCompany = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 export const deleteCompany = async (req, res) => {
   try {
     const { id } = req.params;
@@ -173,7 +172,7 @@ export const deleteCompany = async (req, res) => {
       `UPDATE company_schema.companies
        SET is_active = FALSE, updated_at = CURRENT_TIMESTAMP
        WHERE id = $1
-       RETURNING *`,
+       RETURNING id, name, email`,
       [id]
     );
 
@@ -181,10 +180,14 @@ export const deleteCompany = async (req, res) => {
       return res.status(404).json({ message: "Company not found" });
     }
 
-    res.json({ success: true, data: result.rows[0] });
+    res.json({
+      success: true,
+      message: "Company deleted successfully",
+      deleted_company: result.rows[0]   // optional
+    });
 
   } catch (err) {
     console.error("deleteCompany:", err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };

@@ -26,7 +26,7 @@ export const sendVendorOtp = async (req, res) => {
 
     // Generate OTP
     const otp = generateOTP();
-    const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // 5 mins
+    const expiresAt = new Date(Date.now() + 1 * 60 * 1000); // 5 mins
 
     // Insert OTP into vendor_otp table
     await pool.query(

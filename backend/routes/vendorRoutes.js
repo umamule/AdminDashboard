@@ -1,29 +1,19 @@
+// routes/vendorRoutes.js
 import express from "express";
 import { adminAuth } from "../middleware/adminAuth.js";
-
-import {
-  addVendor,
-  updateVendor,
-  deleteVendor,
-  getAllVendors,
-  getVendorById,
-  uploadVendorDocuments
-} from "../controllers/vendorController.js";
-
 import { uploadVendorDocs } from "../middleware/multerConfig.js";
+import {
+  addVendorWithDocs,
+  updateVendorWithDocs,
+    getAllVendorsWithDocs,
+    deleteVendorWithDocs
+} from "../controllers/vendorController.js";
 
 const router = express.Router();
 
-// Vendor CRUD routes
-router.post("/vendors", adminAuth, addVendor);
-router.get("/vendors", adminAuth, getAllVendors);
-router.get("/vendors/:id", adminAuth, getVendorById);
-router.put("/vendors/:id", adminAuth, updateVendor);
-router.delete("/vendors/:id", adminAuth, deleteVendor);
-
-// Vendor document upload
+// Create Vendor + PDF
 router.post(
-  "/vendors/:id/upload-docs",
+  "/vendors",
   adminAuth,
   uploadVendorDocs.fields([
     { name: "shop_act_pdf", maxCount: 1 },
@@ -31,7 +21,29 @@ router.post(
     { name: "licence_pdf", maxCount: 1 },
     { name: "pan_pdf", maxCount: 1 }
   ]),
-  uploadVendorDocuments
+  addVendorWithDocs
 );
+
+//get all
+
+
+router.get("/vendors", adminAuth, getAllVendorsWithDocs);
+
+
+// Update Vendor + PDF (ONE API)
+router.put(
+  "/vendors/:id",
+  adminAuth,
+  uploadVendorDocs.fields([
+    { name: "shop_act_pdf", maxCount: 1 },
+    { name: "gst_pdf", maxCount: 1 },
+    { name: "licence_pdf", maxCount: 1 },
+    { name: "pan_pdf", maxCount: 1 }
+  ]),
+  updateVendorWithDocs
+);
+
+router.delete("/vendors/:id", adminAuth, deleteVendorWithDocs);
+
 
 export default router;
